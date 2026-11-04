@@ -1,0 +1,47 @@
+<div class="container account-page">
+  <h1>Mein Konto</h1>
+
+  <div class="account-card">
+    <div class="account-avatar">{{ authService.currentUser()?.name?.charAt(0) }}</div>
+    <div>
+      <h3>{{ authService.currentUser()?.name }}</h3>
+      <p>{{ authService.currentUser()?.email }}</p>
+    </div>
+  </div>
+
+  <h2 class="orders-heading">Meine Bestellungen</h2>
+
+  @if (loading()) {
+    <div class="loading">Wird geladen…</div>
+  } @else if (orders().length === 0) {
+    <div class="empty-state">
+      <p>Noch keine Bestellungen.</p>
+      <p class="empty-hint">Deine gekauften Bücher erscheinen hier, sobald du eine Bestellung aufgibst.</p>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <strong>Bestellung #{{ order.id.slice(0, 8) }}</strong>
+              <span class="order-status">{{ order.status }}</span>
+            </div>
+            <span class="order-date">{{ order.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</span>
+          </div>
+
+          <div class="order-items">
+            @for (item of order.items; track item.bookId) {
+              <div class="order-item-row">
+                <span>{{ item.quantity }}× {{ item.title }}</span>
+                <span>{{ item.subtotal.toFixed(2) }} €</span>
+              </div>
+            }
+          </div>
+
+          <div class="order-total">Gesamt: {{ order.total.toFixed(2) }} €</div>
+        </div>
+      }
+    </div>
+  }
+</div>

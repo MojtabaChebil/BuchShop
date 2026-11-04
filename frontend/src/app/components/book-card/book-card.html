@@ -1,0 +1,31 @@
+<article class="book-card">
+  <a [routerLink]="['/buch', book().id]" class="cover-link" tabindex="-1">
+    <app-book-cover [title]="book().title" [author]="book().author" [category]="book().category" />
+    <button
+      type="button"
+      class="fav-btn"
+      [class.active]="isFavorite()"
+      (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite.emit(book().id)"
+      [attr.aria-label]="isFavorite() ? 'Von Favoriten entfernen' : 'Zu Favoriten hinzufügen'"
+    >
+      {{ isFavorite() ? '♥' : '♡' }}
+    </button>
+  </a>
+
+  <div class="book-info">
+    <a [routerLink]="['/buch', book().id]" class="book-title">{{ book().title }}</a>
+    <p class="book-author">{{ book().author }}</p>
+
+    <div class="book-meta">
+      <span class="book-rating">★ {{ book().rating }}</span>
+      <span class="book-category">{{ book().category }}</span>
+    </div>
+
+    <div class="book-footer">
+      <span class="book-price">{{ book().price.toFixed(2) }} €</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="addToCart.emit(book().id)">
+        In den Warenkorb
+      </button>
+    </div>
+  </div>
+</article>

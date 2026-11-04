@@ -1,0 +1,73 @@
+<div class="container cart-page">
+  <h1>Mein Warenkorb</h1>
+
+  @if (loading()) {
+    <div class="loading">Wird geladen…</div>
+  } @else if (placedOrder(); as order) {
+    <div class="order-success">
+      <div class="success-icon">✓</div>
+      <h2>Vielen Dank für deine Bestellung!</h2>
+      <p>Deine Bestellnummer: <strong>{{ order.id.slice(0, 8) }}</strong></p>
+      <p class="success-total">Gesamtsumme: {{ order.total.toFixed(2) }} €</p>
+      <div class="success-actions">
+        <a routerLink="/" class="btn btn-primary">Weiter einkaufen</a>
+        <a routerLink="/konto" class="btn btn-outline">Meine Bestellungen ansehen</a>
+      </div>
+    </div>
+  } @else if (cartService.cart().items.length === 0) {
+    <div class="empty-state">
+      <p>Dein Warenkorb ist noch leer.</p>
+      <p class="empty-hint">Stöbere im Katalog und lege Bücher hinein, die du kaufen möchtest.</p>
+      <a routerLink="/" class="btn btn-primary">Bücher entdecken</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <div class="cart-items">
+        @for (item of cartService.cart().items; track item.book.id) {
+          <div class="cart-item">
+            <div class="cart-item-cover">
+              <app-book-cover [title]="item.book.title" [author]="item.book.author" [category]="item.book.category" />
+            </div>
+
+            <div class="cart-item-info">
+              <a [routerLink]="['/buch', item.book.id]" class="cart-item-title">{{ item.book.title }}</a>
+              <p class="cart-item-author">{{ item.book.author }}</p>
+              <p class="cart-item-price">{{ item.book.price.toFixed(2) }} € / Stück</p>
+            </div>
+
+            <div class="cart-item-qty">
+              <button type="button" (click)="decrease(item.book.id, item.quantity)" aria-label="Menge verringern">−</button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" (click)="increase(item.book.id, item.quantity)" aria-label="Menge erhöhen">+</button>
+            </div>
+
+            <div class="cart-item-subtotal">{{ item.subtotal.toFixed(2) }} €</div>
+
+            <button type="button" class="remove-btn" (click)="remove(item.book.id)" aria-label="Artikel entfernen">
+              ✕
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="cart-summary">
+        <h3>Zusammenfassung</h3>
+        <div class="summary-row">
+          <span>Zwischensumme</span>
+          <span>{{ cartService.cart().total.toFixed(2) }} €</span>
+        </div>
+        <div class="summary-row">
+          <span>Versand</span>
+          <span>Kostenlos</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Gesamt</span>
+          <span>{{ cartService.cart().total.toFixed(2) }} €</span>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" (click)="checkout()" [disabled]="checkingOut()">
+          {{ checkingOut() ? 'Wird bestellt…' : 'Jetzt bestellen' }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

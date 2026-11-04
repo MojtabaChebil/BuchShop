@@ -1,0 +1,57 @@
+<div class="container detail-container">
+  @if (loading()) {
+    <div class="loading">Wird geladen…</div>
+  } @else if (notFound()) {
+    <div class="empty-state">
+      <h2>Buch nicht gefunden</h2>
+      <p class="empty-hint">Dieses Buch existiert nicht oder wurde entfernt.</p>
+      <a routerLink="/" class="btn btn-primary">Zurück zur Startseite</a>
+    </div>
+  } @else if (book(); as b) {
+    <a routerLink="/" class="back-link">← Zurück zum Katalog</a>
+
+    <div class="detail-grid">
+      <div class="detail-cover">
+        <app-book-cover [title]="b.title" [author]="b.author" [category]="b.category" />
+      </div>
+
+      <div class="detail-info">
+        <span class="detail-category">{{ b.category }}</span>
+        <h1>{{ b.title }}</h1>
+        <p class="detail-author">von {{ b.author }} · {{ b.year }}</p>
+        <p class="detail-rating">★ {{ b.rating }} / 5</p>
+
+        <p class="detail-description">{{ b.description }}</p>
+
+        <p class="detail-stock">
+          @if (b.stock > 0) {
+            <span class="in-stock">✓ Auf Lager ({{ b.stock }} verfügbar)</span>
+          } @else {
+            <span class="out-of-stock">Aktuell nicht auf Lager</span>
+          }
+        </p>
+
+        <div class="detail-price">{{ b.price.toFixed(2) }} €</div>
+
+        <div class="detail-actions">
+          <div class="qty-control">
+            <button type="button" (click)="decreaseQty()" aria-label="Menge verringern">−</button>
+            <span>{{ quantity() }}</span>
+            <button type="button" (click)="increaseQty()" aria-label="Menge erhöhen">+</button>
+          </div>
+
+          <button type="button" class="btn btn-primary" (click)="addToCart()">In den Warenkorb</button>
+
+          <button
+            type="button"
+            class="btn btn-outline fav-toggle"
+            [class.active]="isFavorite()"
+            (click)="toggleFavorite()"
+          >
+            {{ isFavorite() ? '♥ Gemerkt' : '♡ Merken' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

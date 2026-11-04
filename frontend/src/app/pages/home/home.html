@@ -1,0 +1,67 @@
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="hero-eyebrow">Handverlesene Klassiker</span>
+      <h1>Geschichten,<br />die bleiben.</h1>
+      <p class="hero-sub">
+        {{ books().length || 18 }} zeitlose Werke, sorgfältig ausgewählt – von Orwells Dystopie bis zu
+        Austens Gesellschaftsroman.
+      </p>
+      <button type="button" class="btn btn-accent" (click)="scrollToCatalog()">Kollektion entdecken</button>
+    </div>
+
+    <div class="hero-shelf" aria-hidden="true">
+      @for (book of heroBooks(); track book.id) {
+        <div class="hero-cover">
+          <app-book-cover [title]="book.title" [author]="book.author" [category]="book.category" />
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<div class="container" id="katalog">
+  <div class="filters">
+    <input
+      type="text"
+      class="form-input search-input"
+      placeholder="Suche nach Titel oder Autor…"
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="onSearch()"
+    />
+    <button type="button" class="btn btn-primary" (click)="onSearch()">Suchen</button>
+  </div>
+
+  <div class="category-chips">
+    @for (cat of categories(); track cat) {
+      <button
+        type="button"
+        class="chip"
+        [class.active]="selectedCategory === cat"
+        (click)="onCategoryChange(cat)"
+      >
+        {{ cat }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Bücher werden geladen…</div>
+  } @else if (books().length === 0) {
+    <div class="empty-state">
+      <p>Keine Treffer{{ searchTerm ? ' für „' + searchTerm + '“' : '' }}.</p>
+      <p class="empty-hint">Versuch's mit einem anderen Titel, Autor oder einer anderen Kategorie.</p>
+    </div>
+  } @else {
+    <div class="book-grid">
+      @for (book of books(); track book.id) {
+        <app-book-card
+          [book]="book"
+          [isFavorite]="isFavorite(book.id)"
+          (addToCart)="onAddToCart($event)"
+          (toggleFavorite)="onToggleFavorite($event)"
+        />
+      }
+    </div>
+  }
+</div>
