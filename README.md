@@ -55,14 +55,11 @@ buchshop/
 
 **Voraussetzung:** [Node.js](https://nodejs.org) ab Version 18 (empfohlen: 20 oder neuer)
 
-1. Projektordner entpacken und hineinwechseln:
+1. Repository klonen und die Umgebungsdatei anlegen:
    ```bash
-   cd buchshop
-   ```
-
-2. Alles installieren (Backend **und** Frontend in einem Schritt):
-   ```bash
-   npm install
+   git clone https://github.com/MojtabaChebil/BuchShop.git
+   cd BuchShop
+   cp backend/.env.example backend/.env
    ```
    *(Das dauert beim ersten Mal 1–2 Minuten, da Angular mitinstalliert wird.)*
 
@@ -132,7 +129,7 @@ Frontend nach dem Login automatisch mitschickt.
 ---
 
 ## 🔒 Hinweis für den produktiven Einsatz
-
+einen eigenen, zufälligen JWT_SECRET in backend/.env setzen (Vorlage: backend/.env.example)
 Dies ist ein Lern-/Mini-Projekt. Für einen echten Produktiveinsatz solltest du:
 - den `JWT_SECRET` in `backend/.env` durch einen eigenen, zufälligen Wert ersetzen
 - `data/db.json` durch eine echte Datenbank ersetzen (z. B. MongoDB oder PostgreSQL)
